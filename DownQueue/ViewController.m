@@ -62,6 +62,8 @@
         [configurations addObject:config];
     }
     
+//    sdfsf
+    
     /* 查询文件的状态 status: 1已下载、 2、未完成、3未下载、4正在下载 */
     self.statusArr = [[DownloadQueueManager sharedInstance] getDownloadsStatus:configurations];
     
