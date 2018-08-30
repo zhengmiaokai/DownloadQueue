@@ -7,15 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17D2E826212FD17D00404832 /* DownloadFileStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 17D2E825212FD17D00404832 /* DownloadFileStatus.m */; };
 		17F798F7212EBEA000D76466 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F798F6212EBEA000D76466 /* AppDelegate.m */; };
 		17F798FA212EBEA000D76466 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F798F9212EBEA000D76466 /* ViewController.m */; };
 		17F798FD212EBEA000D76466 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17F798FB212EBEA000D76466 /* Main.storyboard */; };
 		17F798FF212EBEA200D76466 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17F798FE212EBEA200D76466 /* Assets.xcassets */; };
 		17F79902212EBEA200D76466 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17F79900212EBEA200D76466 /* LaunchScreen.storyboard */; };
 		17F79905212EBEA200D76466 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F79904212EBEA200D76466 /* main.m */; };
+		17F79922212EBFE800D76466 /* DownloadTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F7991E212EBFE700D76466 /* DownloadTaskManager.m */; };
+		17F79923212EBFE800D76466 /* DownloadQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F79921212EBFE700D76466 /* DownloadQueueManager.m */; };
+		17F79927212EC06B00D76466 /* NSString+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F79926212EC06A00D76466 /* NSString+Addition.m */; };
+		17F7992A212EC0FB00D76466 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F79929212EC0FB00D76466 /* NSString+MD5.m */; };
+		17F79935212EC13D00D76466 /* GCDQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F7992E212EC13C00D76466 /* GCDQueue.m */; };
+		17F79936212EC13D00D76466 /* GCDGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F7992F212EC13C00D76466 /* GCDGroup.m */; };
+		17F79937212EC13D00D76466 /* GCDSemaphore.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F79931212EC13C00D76466 /* GCDSemaphore.m */; };
+		17F79938212EC13D00D76466 /* GCDLock.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F79933212EC13C00D76466 /* GCDLock.m */; };
+		17F7993B212EC18400D76466 /* NSFileManager+Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F79939212EC18400D76466 /* NSFileManager+Common.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		17D2E824212FD17D00404832 /* DownloadFileStatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadFileStatus.h; sourceTree = "<group>"; };
+		17D2E825212FD17D00404832 /* DownloadFileStatus.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadFileStatus.m; sourceTree = "<group>"; };
 		17F798F2212EBEA000D76466 /* DownQueue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DownQueue.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17F798F5212EBEA000D76466 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		17F798F6212EBEA000D76466 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -26,6 +38,26 @@
 		17F79901212EBEA200D76466 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		17F79903212EBEA200D76466 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		17F79904212EBEA200D76466 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		17F7991E212EBFE700D76466 /* DownloadTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadTaskManager.m; sourceTree = "<group>"; };
+		17F7991F212EBFE700D76466 /* DownloadQueueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadQueueManager.h; sourceTree = "<group>"; };
+		17F79920212EBFE700D76466 /* DownloadTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadTaskManager.h; sourceTree = "<group>"; };
+		17F79921212EBFE700D76466 /* DownloadQueueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadQueueManager.m; sourceTree = "<group>"; };
+		17F79925212EC06A00D76466 /* NSString+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Addition.h"; sourceTree = "<group>"; };
+		17F79926212EC06A00D76466 /* NSString+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Addition.m"; sourceTree = "<group>"; };
+		17F79928212EC0FB00D76466 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
+		17F79929212EC0FB00D76466 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
+		17F7992C212EC13C00D76466 /* GCDSemaphore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDSemaphore.h; sourceTree = "<group>"; };
+		17F7992D212EC13C00D76466 /* GCDLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDLock.h; sourceTree = "<group>"; };
+		17F7992E212EC13C00D76466 /* GCDQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDQueue.m; sourceTree = "<group>"; };
+		17F7992F212EC13C00D76466 /* GCDGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDGroup.m; sourceTree = "<group>"; };
+		17F79930212EC13C00D76466 /* GCDConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDConstant.h; sourceTree = "<group>"; };
+		17F79931212EC13C00D76466 /* GCDSemaphore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDSemaphore.m; sourceTree = "<group>"; };
+		17F79932212EC13C00D76466 /* GCDQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDQueue.h; sourceTree = "<group>"; };
+		17F79933212EC13C00D76466 /* GCDLock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDLock.m; sourceTree = "<group>"; };
+		17F79934212EC13C00D76466 /* GCDGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDGroup.h; sourceTree = "<group>"; };
+		17F79939212EC18400D76466 /* NSFileManager+Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Common.m"; sourceTree = "<group>"; };
+		17F7993A212EC18400D76466 /* NSFileManager+Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+Common.h"; sourceTree = "<group>"; };
+		17F7993C212EC1D900D76466 /* CategoryConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryConstant.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +94,7 @@
 				17F798F6212EBEA000D76466 /* AppDelegate.m */,
 				17F798F8212EBEA000D76466 /* ViewController.h */,
 				17F798F9212EBEA000D76466 /* ViewController.m */,
+				17F7991D212EBFE700D76466 /* DownLoadManager */,
 				17F798FB212EBEA000D76466 /* Main.storyboard */,
 				17F798FE212EBEA200D76466 /* Assets.xcassets */,
 				17F79900212EBEA200D76466 /* LaunchScreen.storyboard */,
@@ -69,6 +102,51 @@
 				17F79904212EBEA200D76466 /* main.m */,
 			);
 			path = DownQueue;
+			sourceTree = "<group>";
+		};
+		17F7991D212EBFE700D76466 /* DownLoadManager */ = {
+			isa = PBXGroup;
+			children = (
+				17F7992B212EC13C00D76466 /* GCD_Objc */,
+				17F79924212EC05500D76466 /* Categorys */,
+				17F7991F212EBFE700D76466 /* DownloadQueueManager.h */,
+				17F79921212EBFE700D76466 /* DownloadQueueManager.m */,
+				17F79920212EBFE700D76466 /* DownloadTaskManager.h */,
+				17F7991E212EBFE700D76466 /* DownloadTaskManager.m */,
+				17D2E824212FD17D00404832 /* DownloadFileStatus.h */,
+				17D2E825212FD17D00404832 /* DownloadFileStatus.m */,
+			);
+			path = DownLoadManager;
+			sourceTree = "<group>";
+		};
+		17F79924212EC05500D76466 /* Categorys */ = {
+			isa = PBXGroup;
+			children = (
+				17F7993A212EC18400D76466 /* NSFileManager+Common.h */,
+				17F79939212EC18400D76466 /* NSFileManager+Common.m */,
+				17F79928212EC0FB00D76466 /* NSString+MD5.h */,
+				17F79929212EC0FB00D76466 /* NSString+MD5.m */,
+				17F79925212EC06A00D76466 /* NSString+Addition.h */,
+				17F79926212EC06A00D76466 /* NSString+Addition.m */,
+				17F7993C212EC1D900D76466 /* CategoryConstant.h */,
+			);
+			path = Categorys;
+			sourceTree = "<group>";
+		};
+		17F7992B212EC13C00D76466 /* GCD_Objc */ = {
+			isa = PBXGroup;
+			children = (
+				17F7992C212EC13C00D76466 /* GCDSemaphore.h */,
+				17F79931212EC13C00D76466 /* GCDSemaphore.m */,
+				17F7992D212EC13C00D76466 /* GCDLock.h */,
+				17F79933212EC13C00D76466 /* GCDLock.m */,
+				17F79932212EC13C00D76466 /* GCDQueue.h */,
+				17F7992E212EC13C00D76466 /* GCDQueue.m */,
+				17F79934212EC13C00D76466 /* GCDGroup.h */,
+				17F7992F212EC13C00D76466 /* GCDGroup.m */,
+				17F79930212EC13C00D76466 /* GCDConstant.h */,
+			);
+			path = GCD_Objc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,9 +219,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17F79935212EC13D00D76466 /* GCDQueue.m in Sources */,
 				17F798FA212EBEA000D76466 /* ViewController.m in Sources */,
+				17F79927212EC06B00D76466 /* NSString+Addition.m in Sources */,
 				17F79905212EBEA200D76466 /* main.m in Sources */,
+				17F79936212EC13D00D76466 /* GCDGroup.m in Sources */,
+				17D2E826212FD17D00404832 /* DownloadFileStatus.m in Sources */,
+				17F7993B212EC18400D76466 /* NSFileManager+Common.m in Sources */,
+				17F79938212EC13D00D76466 /* GCDLock.m in Sources */,
+				17F79922212EBFE800D76466 /* DownloadTaskManager.m in Sources */,
 				17F798F7212EBEA000D76466 /* AppDelegate.m in Sources */,
+				17F79923212EBFE800D76466 /* DownloadQueueManager.m in Sources */,
+				17F7992A212EC0FB00D76466 /* NSString+MD5.m in Sources */,
+				17F79937212EC13D00D76466 /* GCDSemaphore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,15 +371,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = L5WU564W59;
 				INFOPLIST_FILE = DownQueue/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.home.DownQueue;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xiaoniu66.Neptune;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "f35eee2d-ed3e-4aa5-b394-bcf5938627b4";
+				PROVISIONING_PROFILE_SPECIFIER = NeptuneDev;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -300,15 +391,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = L5WU564W59;
 				INFOPLIST_FILE = DownQueue/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.home.DownQueue;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xiaoniu66.Neptune;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "f35eee2d-ed3e-4aa5-b394-bcf5938627b4";
+				PROVISIONING_PROFILE_SPECIFIER = NeptuneDev;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
