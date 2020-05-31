@@ -3,43 +3,13 @@
 //  Neptune
 //
 //  Created by zhengmiaokai on 2018/8/17.
-//  Copyright © 2018年 NEO Capital. All rights reserved.
+//  Copyright © 2018年 zhengmiaokai. All rights reserved.
 //
 
 #import "DownloadQueueManager.h"
-#import "DownloadTaskManager.h"
-
+#import "DownloadTaskQueue.h"
 #import "GCDConstant.h"
 #import "CategoryConstant.h"
-
-@interface DownloadConfiguration ()
-
-@property (nonatomic , assign) NSInteger totalLength;
-
-@property (nonatomic , strong) NSFileHandle *writeHandle;
-
-@property (nonatomic, strong) NSFileHandle *readHandle;
-
-@end
-
-@implementation DownloadConfiguration
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        self.foldName = @"Downloads";
-    }
-    return self;
-}
-
-- (void)setFileName:(NSString *)fileName {
-    _fileName = fileName;
-    
-    self.filePath = [NSFileManager pathWithFileName:_fileName foldPath:_foldName];
-    self.tmpPath = [NSFileManager pathWithFileName:[_fileName MD5Hash] foldPath:_foldName];
-}
-
-@end
 
 @implementation DownloadQueueManager
 
@@ -47,15 +17,49 @@
     static DownloadQueueManager *manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        manager = [[DownloadQueueManager alloc] init];
+        manager = [[self alloc] init];
     });
     return manager;
 }
 
-- (NSURLSessionDataTask *)downloadWithConfiguration:
-(DownloadConfiguration *)configuration
-                                  receiveDataLength:(void(^)(DownloadConfiguration* configuration))receiveDataLength
-                                      completeBlock:(void(^)(DownloadConfiguration* configuration))completeBlock {
+/* downloadTask */
+- (NSURLSessionTask *)downloadTaskWithConfig:(DownloadConfig *)configuration
+                                  receiveDataLength:(void(^)(DownloadConfig* configuration))receiveDataLength
+                                      completeBlock:(void(^)(DownloadConfig* configuration))completeBlock {
+    NSURLSessionDownloadTask* downloadTask = [self downloadTaskWithURLString:configuration.URLString didFinishDownloading:^(NSURLSessionDownloadTask *downloadTask, NSURL *location) {
+        // 下载完成，将临时文件移至指定目录
+        NSString* directionPath = [location.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+        [self moveFile:directionPath toPath:configuration.filePath];
+    } didWriteData:^(NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        // 回传下载进度
+        configuration.currentLength = totalBytesWritten;
+        configuration.totalLength = totalBytesExpectedToWrite;
+        
+        [GCDQueue async_main:^{
+            if (receiveDataLength) {
+                receiveDataLength(configuration);
+            }
+        }];
+    } didComplete:^(NSURLSessionTask *task, NSData *fileData, NSError *error) {
+        // 结束回调
+        [GCDQueue async_main:^{
+            if (completeBlock) {
+                completeBlock(configuration);
+            }
+        }];
+    }];
+    
+    configuration.downloadTask = downloadTask;
+    
+    [downloadTask resume];
+    
+    return downloadTask;
+}
+
+/* dataTask */
+- (NSURLSessionTask *)dataTaskWithConfig:(DownloadConfig *)configuration
+                                  receiveDataLength:(void(^)(DownloadConfig* configuration))receiveDataLength
+                                      completeBlock:(void(^)(DownloadConfig* configuration))completeBlock {
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:configuration.URLString]];
     
@@ -88,14 +92,13 @@
         }
         
         return NSURLSessionResponseAllow;
-    } didComplete:^(NSURLSessionTask *task, NSError *error) {
+    } didComplete:^(NSURLSessionTask *task,  NSData* fileData, NSError *error) {
         //子线程返回
         if ((configuration.currentLength == configuration.totalLength) && (configuration.totalLength > 0)) {
             configuration.currentLength = 0;
             configuration.totalLength = 0;
             
             [configuration.writeHandle closeFile];
-            configuration.writeHandle = nil;
             
             [self moveFile:configuration.tmpPath toPath:configuration.filePath];
             
@@ -126,7 +129,7 @@
     
     NSMutableArray* result = [NSMutableArray arrayWithCapacity:configurations.count];
     //1已下载、 2、未完成、3未下载、4正在下载
-    [configurations enumerateObjectsUsingBlock:^(DownloadConfiguration*  _Nonnull configuration, NSUInteger idx, BOOL * _Nonnull stop) {
+    [configurations enumerateObjectsUsingBlock:^(DownloadConfig*  _Nonnull configuration, NSUInteger idx, BOOL * _Nonnull stop) {
         
         DownloadFileStatus* statusModel = [[DownloadFileStatus alloc] init];
         statusModel.fileName = configuration.fileName;
@@ -137,7 +140,7 @@
             configuration.readHandle = [NSFileHandle fileHandleForReadingAtPath:configuration.filePath];
             if (configuration.readHandle) {
                 NSUInteger length = [[configuration.readHandle availableData] length];
-                statusModel.status = 1;
+                statusModel.status = FileStatusTypeFinish;
                 statusModel.length = length;
                 statusModel.filePath = configuration.filePath;
                 [result addObject:statusModel];
@@ -147,12 +150,12 @@
             configuration.readHandle = [NSFileHandle fileHandleForReadingAtPath:configuration.tmpPath];
             if (configuration.readHandle) {
                 NSUInteger length = [[configuration.readHandle availableData] length];
-                statusModel.status = 2;
+                statusModel.status = FileStatusTypePause;
                 statusModel.length =length;
                 [result addObject:statusModel];
             }
             else {
-                statusModel.status = 3;
+                statusModel.status = FileStatusTypeBegin;
                 statusModel.length = 0;
                 [result addObject:statusModel];
             }

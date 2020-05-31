@@ -1,15 +1,14 @@
 //
-//  DownloadTaskManager.m
+//  DownloadTaskQueue.m
 //  Basic
 //
 //  Created by zhengMK on 2018/8/19.
 //  Copyright © 2018年 zhengmiaokai. All rights reserved.
 //
 
-#import "DownloadTaskManager.h"
-#import <objc/runtime.h>
-
+#import "DownloadTaskQueue.h"
 #import "CategoryConstant.h"
+#import <objc/runtime.h>
 
 static const void *identifyKey = &identifyKey;
 
@@ -31,7 +30,7 @@ static const void *identifyKey = &identifyKey;
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.identify = [[NSString randomStringWithLength:8] MD5Hash];
+        self.identify = [[NSString randomStringWithLength:8] MD5];
     }
     return self;
 }
@@ -47,23 +46,23 @@ static const void *identifyKey = &identifyKey;
 
 @end
 
-@interface DownloadTaskManager () <NSURLSessionDownloadDelegate,NSURLSessionDataDelegate, NSURLSessionTaskDelegate>
+@interface DownloadTaskQueue () <NSURLSessionDownloadDelegate,NSURLSessionDataDelegate, NSURLSessionTaskDelegate>
 
 @property (nonatomic, strong) NSURLSession* session;
 
 @property (nonatomic, strong) NSOperationQueue* queue;
 
-@property (nonatomic, strong) NSMutableArray* taskItems;
+@property (nonatomic, strong) NSMutableDictionary* taskItems;
 
 @end
 
-@implementation DownloadTaskManager
+@implementation DownloadTaskQueue
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         
-        self.taskItems = [NSMutableArray array];
+        self.taskItems = [NSMutableDictionary dictionary];
         
         NSOperationQueue* queue = [[NSOperationQueue alloc] init];
         self.queue = queue;
@@ -76,7 +75,7 @@ static const void *identifyKey = &identifyKey;
 
 - (NSURLSessionDownloadTask *)downloadTaskWithURLString:(NSString *)URLString didFinishDownloading:(void(^)(NSURLSessionDownloadTask *downloadTask, NSURL *location))finishDownloading
                                            didWriteData:(void(^)(NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))writeData
-                                            didComplete:(void(^)(NSURLSessionTask *task, NSError *error))complete {
+                                            didComplete:(void(^)(NSURLSessionTask *task, NSData* fileData, NSError *error))complete {
     
     NSURLSessionDownloadTask* downloadTask = [_session downloadTaskWithURL:[NSURL URLWithString:URLString]];
     
@@ -84,7 +83,7 @@ static const void *identifyKey = &identifyKey;
     taskItem.didFinishDownloading = finishDownloading;
     taskItem.didWriteData  =  writeData;
     taskItem.didComplete = complete;
-    [_taskItems addObject:taskItem];
+    [_taskItems setValue:taskItem forKey:taskItem.identify];
     
     downloadTask.identify = taskItem.identify;
     
@@ -93,7 +92,7 @@ static const void *identifyKey = &identifyKey;
 
 - (NSURLSessionDownloadTask *)downloadTaskWithResumeData:(NSData *)resumeData didFinishDownloading:(void(^)(NSURLSessionDownloadTask *downloadTask, NSURL *location))finishDownloading
                                       didWriteData:(void(^)(NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))writeData
-                                             didComplete:(void(^)(NSURLSessionTask *task, NSError *error))complete {
+                                             didComplete:(void(^)(NSURLSessionTask *task, NSData* fileData, NSError *error))complete {
     
     NSURLSessionDownloadTask* downloadTask = [_session downloadTaskWithResumeData:resumeData];
     
@@ -101,7 +100,7 @@ static const void *identifyKey = &identifyKey;
     taskItem.didFinishDownloading = finishDownloading;
     taskItem.didWriteData =  writeData;
     taskItem.didComplete = complete;
-    [_taskItems addObject:taskItem];
+    [_taskItems setValue:taskItem forKey:taskItem.identify];
     
     downloadTask.identify = taskItem.identify;
     
@@ -110,7 +109,7 @@ static const void *identifyKey = &identifyKey;
 
 - (NSURLSessionDataTask *)dataTaskWithRequest:(NSMutableURLRequest *)request  didReceiveData:(void(^)(NSURLSessionDataTask *dataTask, NSData *data))receiveData
                              didReceiveResponse:(NSURLSessionResponseDisposition (^)(NSURLSessionDataTask *dataTask, NSURLResponse *response))receiveResponse
-                                    didComplete:(void(^)(NSURLSessionTask *task, NSError *error))complete {
+                                    didComplete:(void(^)(NSURLSessionTask *task, NSData* fileData, NSError *error))complete {
     
     NSURLSessionDataTask* dataTask = [_session dataTaskWithRequest:request];
     
@@ -118,7 +117,10 @@ static const void *identifyKey = &identifyKey;
     taskItem.didReceiveData = receiveData;
     taskItem.didReceiveResponse =  receiveResponse;
     taskItem.didComplete = complete;
-    [_taskItems addObject:taskItem];
+    
+    @synchronized (self) {
+        [_taskItems setValue:taskItem forKey:taskItem.identify];
+    }
 
     dataTask.identify = taskItem.identify;
     
@@ -130,60 +132,70 @@ static const void *identifyKey = &identifyKey;
               task:(NSURLSessionTask *)task
 didCompleteWithError:(NSError *)error {
     
-    __block URLSessionTaskItem* taskItem = nil;
-    [self.taskItems enumerateObjectsUsingBlock:^(URLSessionTaskItem*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        if ([task.identify isEqualToString:obj.identify]) {
-            taskItem = obj;
-            taskItem.didComplete(task, error);
-            *stop = YES;
-        }
-    }];
-    
-    if (taskItem && [self.taskItems containsObject:taskItem]) {
-        [self.taskItems removeObject:taskItem];
+    URLSessionTaskItem* taskItem = nil;
+    @synchronized (self) {
+        taskItem = [_taskItems valueForKey:task.identify];
     }
     
+    if (taskItem) {
+        
+        NSData* fileData = nil;
+        if ([taskItem isKindOfClass:[URLSessionDataTaskItem class]]) {
+           fileData = [taskItem valueForKey:@"fileData"];
+        }
+        
+        taskItem.didComplete(task, fileData?[fileData copy]:fileData, error);
+        [_taskItems removeObjectForKey:task.identify];
+    }
 }
 
 #pragma mark NSURLSessionDataDelegate
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
-//    NSFileHandle
     
-    [self.taskItems enumerateObjectsUsingBlock:^(URLSessionDataTaskItem*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[URLSessionDataTaskItem class]] && [dataTask.identify isEqualToString:obj.identify]) {
-            obj.didReceiveData(dataTask, data);
-            *stop = YES;
+    URLSessionDataTaskItem* taskItem = nil;
+    @synchronized (self) {
+        taskItem = [_taskItems valueForKey:dataTask.identify];
+    }
+    
+    if ([taskItem isKindOfClass:[URLSessionDataTaskItem class]]) {
+        if (taskItem.fileData == nil) {
+            taskItem.fileData = [NSMutableData data];
         }
-    }];
+        [taskItem.fileData appendData:data];
+        taskItem.didReceiveData(dataTask, data);
+    }
 }
 
 
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
     
-    __block NSURLSessionResponseDisposition disposition;
+    URLSessionDataTaskItem* taskItem = nil;
+    @synchronized (self) {
+        taskItem = [_taskItems valueForKey:dataTask.identify];
+    }
     
-    [self.taskItems enumerateObjectsUsingBlock:^(URLSessionDataTaskItem*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[URLSessionDataTaskItem class]] && [dataTask.identify isEqualToString:obj.identify]) {
-            disposition = obj.didReceiveResponse(dataTask, response);
-            *stop = YES;
-        }
-    }];
+    NSURLSessionResponseDisposition _disposition = NSURLSessionResponseAllow;
     
-    completionHandler(disposition);
+    if ([taskItem isKindOfClass:[URLSessionDataTaskItem class]]) {
+        _disposition = taskItem.didReceiveResponse(dataTask, response);
+    }
+    
+    completionHandler(_disposition);
 }
 
 #pragma mark NSURLSessionDownloadDelegate
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location {
     
-    [self.taskItems enumerateObjectsUsingBlock:^(URLSessionDownloadTaskItem*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[URLSessionDownloadTaskItem class]] && [downloadTask.identify isEqualToString:obj.identify]) {
-            obj.didFinishDownloading(downloadTask, location);
-            *stop = YES;
-        }
-    }];
+    URLSessionDownloadTaskItem* taskItem = nil;
+    @synchronized (self) {
+        taskItem = [_taskItems valueForKey:downloadTask.identify];
+    }
+    
+    if ([taskItem isKindOfClass:[URLSessionDownloadTaskItem class]]) {
+        taskItem.didFinishDownloading(downloadTask, location);
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
@@ -191,12 +203,14 @@ didFinishDownloadingToURL:(NSURL *)location {
  totalBytesWritten:(int64_t)totalBytesWritten
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     
-    [self.taskItems enumerateObjectsUsingBlock:^(URLSessionDownloadTaskItem*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[URLSessionDownloadTaskItem class]] && [downloadTask.identify isEqualToString:obj.identify]) {
-            obj.didWriteData(downloadTask, bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
-            *stop = YES;
-        }
-    }];
+    URLSessionDownloadTaskItem* taskItem = nil;
+    @synchronized (self) {
+        taskItem = [_taskItems valueForKey:downloadTask.identify];
+    }
+    
+    if ([taskItem isKindOfClass:[URLSessionDownloadTaskItem class]]) {
+        taskItem.didWriteData(downloadTask, bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    }
 }
 
 @end

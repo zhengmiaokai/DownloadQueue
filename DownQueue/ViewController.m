@@ -3,7 +3,7 @@
 //  DownQueue
 //
 //  Created by zhengmiaokai on 2018/8/23.
-//  Copyright © 2018年 xiaoniu66. All rights reserved.
+//  Copyright © 2018年 zhengmiaokai. All rights reserved.
 //
 
 #import "ViewController.h"
@@ -56,13 +56,11 @@
         NSString* URLString = data[@"URLString"];
         NSString* fileName = data[@"fileName"];
         
-        DownloadConfiguration* config = [[DownloadConfiguration alloc] init];
+        DownloadConfig* config = [[DownloadConfig alloc] init];
         config.URLString = URLString;
         config.fileName = fileName;
         [configurations addObject:config];
     }
-    
-//    sdfsf
     
     /* 查询文件的状态 status: 1已下载、 2、未完成、3未下载、4正在下载 */
     self.statusArr = [[DownloadQueueManager sharedInstance] getDownloadsStatus:configurations];
@@ -73,22 +71,22 @@
 - (void)dowloadWithData:(NSInteger)index {
     
     DownloadFileStatus* statusData  = [_statusArr objectAtIndex:index];
-    statusData.status = 4;
+    statusData.status = FileStatusTypeLoading;
     
-    DownloadConfiguration* config = [[DownloadConfiguration alloc] init];
+    DownloadConfig* config = [[DownloadConfig alloc] init];
     config.URLString = statusData.URLString;
     config.fileName = statusData.fileName;
     [_configurations addObject:config];
     
     /* 下载（支持断点续传）*/
      __weak typeof(self) weakSelf = self;
-    [[DownloadQueueManager sharedInstance] downloadWithConfiguration:config receiveDataLength:^(DownloadConfiguration *configuration) {
+    [[DownloadQueueManager sharedInstance] dataTaskWithConfig:config receiveDataLength:^(DownloadConfig *configuration) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         statusData.length = configuration.currentLength;
         [strongSelf.tableView reloadData];
-    } completeBlock:^(DownloadConfiguration *configuration) {
+    } completeBlock:^(DownloadConfig *configuration) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        statusData.status = 1;
+        statusData.status = FileStatusTypeFinish;
         statusData.filePath = configuration.filePath;
         [strongSelf.tableView reloadData];
     }];
@@ -100,15 +98,17 @@
     DownloadFileStatus* statusData  = [_statusArr objectAtIndex:index];
     
     __weak typeof(self) weakSelf = self;
-    [_configurations enumerateObjectsUsingBlock:^(DownloadConfiguration*  _Nonnull config, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_configurations enumerateObjectsUsingBlock:^(DownloadConfig*  _Nonnull config, NSUInteger idx, BOOL * _Nonnull stop) {
          __strong typeof(weakSelf) strongSelf = weakSelf;
         if ([config.URLString isEqualToString:statusData.URLString]) {
             [config.downloadTask suspend];
-            statusData.status = 2;
+            statusData.status = FileStatusTypePause;
             [strongSelf.tableView reloadData];
             *stop = YES;
         }
     }];
+    
+    NSLog(@"任务暂停");
 }
 
 - (void)resume:(NSInteger)index {
@@ -117,12 +117,12 @@
     
     __block BOOL isHave = NO;
     __weak typeof(self) weakSelf = self;
-    [_configurations enumerateObjectsUsingBlock:^(DownloadConfiguration*  _Nonnull config, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_configurations enumerateObjectsUsingBlock:^(DownloadConfig*  _Nonnull config, NSUInteger idx, BOOL * _Nonnull stop) {
        __strong typeof(weakSelf) strongSelf = weakSelf;
         if ([config.URLString isEqualToString:statusData.URLString]) {
             isHave = YES;
             [config.downloadTask resume];
-            statusData.status = 4;
+            statusData.status = FileStatusTypeLoading;
             [strongSelf.tableView reloadData];
             *stop = YES;
         }
@@ -131,6 +131,8 @@
     if (isHave == NO) {
         [self dowloadWithData:index];
     }
+    
+    NSLog(@"任务继续");
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -214,6 +216,5 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 
 @end

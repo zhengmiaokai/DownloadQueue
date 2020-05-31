@@ -3,32 +3,32 @@
 //  DownQueue
 //
 //  Created by zhengmiaokai on 2018/8/24.
-//  Copyright © 2018年 xiaoniu66. All rights reserved.
+//  Copyright © 2018年 zhengmiaokai. All rights reserved.
 //
 
 #import "DownloadFileStatus.h"
 
 @implementation DownloadFileStatus
 
-- (void)setStatus:(NSInteger)status {
+- (void)setStatus:(FileStatusType)status {
     _status = status;
     
     switch (status) {
-        case 1:
+        case FileStatusTypeFinish:
             _statusName = @"预览";
-            _operation = 0;
+            _operation = FileOperationTypeOpen;
             break;
-        case 2:
+        case FileStatusTypePause:
             _statusName = @"继续";
-            _operation = 3;
+            _operation = FileOperationTypeContinue;
             break;
-        case 3:
+        case FileStatusTypeBegin:
             _statusName = @"下载";
-            _operation = 1;
+            _operation = FileOperationTypeDownload;
             break;
-        case 4:
+        case FileStatusTypeLoading:
             _statusName = @"暂停";
-            _operation = 2;
+            _operation = FileOperationTypePause;
             break;
         default:
             break;
