@@ -12,15 +12,15 @@
 
 /* Document目录
  */
-NSString* DocumentPath();
+NSString* DocumentPath(void);
 
 /* Library目录
  */
-NSString* LibraryPath();
+NSString* LibraryPath(void);
 
 /* Temp目录
  */
-NSString* TempPath();
+NSString* TempPath(void);
 
 /** 创建文件夹
  *  folderName 文件夹名

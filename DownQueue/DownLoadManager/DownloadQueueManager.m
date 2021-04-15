@@ -8,7 +8,6 @@
 
 #import "DownloadQueueManager.h"
 #import "DownloadTaskQueue.h"
-#import "GCDConstant.h"
 #import "CategoryConstant.h"
 
 @implementation DownloadQueueManager
@@ -35,18 +34,18 @@
         configuration.currentLength = totalBytesWritten;
         configuration.totalLength = totalBytesExpectedToWrite;
         
-        [GCDQueue async_main:^{
-            if (receiveDataLength) {
+        if (receiveDataLength) {
+            dispatch_async(dispatch_get_main_queue(), ^{
                 receiveDataLength(configuration);
-            }
-        }];
+            });
+        }
     } didComplete:^(NSURLSessionTask *task, NSData *fileData, NSError *error) {
         // 结束回调
-        [GCDQueue async_main:^{
-            if (completeBlock) {
+        if (completeBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
                 completeBlock(configuration, error);
-            }
-        }];
+            });
+        }
     }];
     
     configuration.downloadTask = downloadTask;
@@ -77,10 +76,11 @@
         [configuration.writeHandle writeData:data];
         
         configuration.currentLength += data.length;
-        
-        [GCDQueue async_main:^{
-            receiveDataLength(configuration);
-        }];
+        if (receiveDataLength) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                receiveDataLength(configuration);
+            });
+        }
     } didReceiveResponse:^NSURLSessionResponseDisposition(NSURLSessionDataTask *dataTask, NSURLResponse *response) {
         //子线程返回
         
@@ -101,15 +101,18 @@
             
             [self moveFile:configuration.tmpPath toPath:configuration.filePath];
             
-            
-            [GCDQueue async_main:^{
-                completeBlock(configuration, error);
-            }];
+            if (completeBlock) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completeBlock(configuration, error);
+                });
+            }
         }
         else {
-            [GCDQueue async_main:^{
-                completeBlock(configuration, error);
-            }];
+            if (completeBlock) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completeBlock(configuration, error);
+                });
+            }
         }
     }];
     

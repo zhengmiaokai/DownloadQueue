@@ -12,7 +12,7 @@
 
 /* Document目录
  */
-NSString* DocumentPath() {
+NSString* DocumentPath(void) {
     NSString* documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     /*
     [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
@@ -22,14 +22,14 @@ NSString* DocumentPath() {
 
 /* Library目录
  */
-NSString* LibraryPath() {
+NSString* LibraryPath(void) {
     NSString* libraryPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
     return libraryPath;
 }
 
 /* Temp目录
  */
-NSString* TempPath() {
+NSString* TempPath(void) {
     NSString* tempPath = NSTemporaryDirectory();
     return tempPath;
 }
