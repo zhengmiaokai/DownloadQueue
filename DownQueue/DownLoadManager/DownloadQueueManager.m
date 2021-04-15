@@ -25,7 +25,7 @@
 /* downloadTask */
 - (NSURLSessionTask *)downloadTaskWithConfig:(DownloadConfig *)configuration
                                   receiveDataLength:(void(^)(DownloadConfig* configuration))receiveDataLength
-                                      completeBlock:(void(^)(DownloadConfig* configuration))completeBlock {
+                                      completeBlock:(void(^)(DownloadConfig* configuration, NSError* error))completeBlock {
     NSURLSessionDownloadTask* downloadTask = [self downloadTaskWithURLString:configuration.URLString didFinishDownloading:^(NSURLSessionDownloadTask *downloadTask, NSURL *location) {
         // 下载完成，将临时文件移至指定目录
         NSString* directionPath = [location.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
@@ -44,7 +44,7 @@
         // 结束回调
         [GCDQueue async_main:^{
             if (completeBlock) {
-                completeBlock(configuration);
+                completeBlock(configuration, error);
             }
         }];
     }];
@@ -59,7 +59,7 @@
 /* dataTask */
 - (NSURLSessionTask *)dataTaskWithConfig:(DownloadConfig *)configuration
                                   receiveDataLength:(void(^)(DownloadConfig* configuration))receiveDataLength
-                                      completeBlock:(void(^)(DownloadConfig* configuration))completeBlock {
+                                      completeBlock:(void(^)(DownloadConfig* configuration, NSError* error))completeBlock {
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:configuration.URLString]];
     
@@ -82,7 +82,6 @@
             receiveDataLength(configuration);
         }];
     } didReceiveResponse:^NSURLSessionResponseDisposition(NSURLSessionDataTask *dataTask, NSURLResponse *response) {
-        NSLog(@"启动任务");
         //子线程返回
         
         configuration.totalLength = response.expectedContentLength + configuration.currentLength;
@@ -104,11 +103,13 @@
             
             
             [GCDQueue async_main:^{
-                completeBlock(configuration);
+                completeBlock(configuration, error);
             }];
         }
         else {
-            NSLog(@"downloadError：%@",error.description);
+            [GCDQueue async_main:^{
+                completeBlock(configuration, error);
+            }];
         }
     }];
     

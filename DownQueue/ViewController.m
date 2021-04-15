@@ -84,10 +84,14 @@
         __strong typeof(weakSelf) strongSelf = weakSelf;
         statusData.length = configuration.currentLength;
         [strongSelf.tableView reloadData];
-    } completeBlock:^(DownloadConfig *configuration) {
+    } completeBlock:^(DownloadConfig *configuration, NSError* error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        statusData.status = FileStatusTypeFinish;
-        statusData.filePath = configuration.filePath;
+        if (error) {
+            statusData.status = FileStatusTypeError;
+        } else {
+            statusData.status = FileStatusTypeFinish;
+            statusData.filePath = configuration.filePath;
+        }
         [strongSelf.tableView reloadData];
     }];
 }
@@ -107,8 +111,6 @@
             *stop = YES;
         }
     }];
-    
-    NSLog(@"任务暂停");
 }
 
 - (void)resume:(NSInteger)index {
@@ -131,8 +133,6 @@
     if (isHave == NO) {
         [self dowloadWithData:index];
     }
-    
-    NSLog(@"任务继续");
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

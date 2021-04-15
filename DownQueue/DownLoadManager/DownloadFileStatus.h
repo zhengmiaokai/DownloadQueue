@@ -12,14 +12,16 @@ typedef NS_ENUM(NSInteger, FileStatusType) {
     FileStatusTypeFinish       = 1,
     FileStatusTypePause        = 2,
     FileStatusTypeBegin        = 3,
-    FileStatusTypeLoading      = 4
+    FileStatusTypeLoading      = 4,
+    FileStatusTypeError        = 5,
 };
 
 typedef NS_ENUM(NSInteger, FileOperationType) {
     FileOperationTypeOpen        = 0,
     FileOperationTypeDownload    = 1,
     FileOperationTypePause       = 2,
-    FileOperationTypeContinue    = 3
+    FileOperationTypeContinue    = 3,
+    FileOperationTypeError       = 4,
 };
 
 @interface DownloadFileStatus : NSObject

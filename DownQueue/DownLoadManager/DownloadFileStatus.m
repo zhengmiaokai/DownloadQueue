@@ -30,6 +30,10 @@
             _statusName = @"暂停";
             _operation = FileOperationTypePause;
             break;
+        case FileStatusTypeError:
+            _statusName = @"失败";
+            _operation = FileOperationTypeError;
+            break;
         default:
             break;
     }

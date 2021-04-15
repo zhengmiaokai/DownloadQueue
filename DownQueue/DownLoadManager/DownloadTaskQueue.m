@@ -144,7 +144,7 @@ didCompleteWithError:(NSError *)error {
            fileData = [taskItem valueForKey:@"fileData"];
         }
         
-        taskItem.didComplete(task, fileData?[fileData copy]:fileData, error);
+        taskItem.didComplete(task, fileData?[fileData copy]:fileData, fileData?nil:[NSError errorWithDomain:@"无效地址" code:-1 userInfo:nil]);
         [_taskItems removeObjectForKey:task.identify];
     }
 }

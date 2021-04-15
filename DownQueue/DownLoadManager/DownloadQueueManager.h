@@ -16,11 +16,11 @@
 
 - (NSURLSessionTask *)downloadTaskWithConfig:(DownloadConfig *)configuration
                                         receiveDataLength:(void(^)(DownloadConfig* configuration))receiveDataLength
-                                           completeBlock:(void(^)(DownloadConfig* configuration))completeBlock;
+                                           completeBlock:(void(^)(DownloadConfig* configuration, NSError* error))completeBlock;
 
 - (NSURLSessionTask *)dataTaskWithConfig:(DownloadConfig *)configuration
                                   receiveDataLength:(void(^)(DownloadConfig* configuration))receiveDataLength
-                                      completeBlock:(void(^)(DownloadConfig* configuration))completeBlock;
+                                      completeBlock:(void(^)(DownloadConfig* configuration, NSError* error))completeBlock;
 
 - (NSArray <DownloadFileStatus*> *)getDownloadsStatus:(NSArray *)configurations;
 
