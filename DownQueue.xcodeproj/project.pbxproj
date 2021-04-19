@@ -13,13 +13,11 @@
 		17F798FF212EBEA200D76466 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17F798FE212EBEA200D76466 /* Assets.xcassets */; };
 		17F79902212EBEA200D76466 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17F79900212EBEA200D76466 /* LaunchScreen.storyboard */; };
 		17F79905212EBEA200D76466 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F79904212EBEA200D76466 /* main.m */; };
-		17F79927212EC06B00D76466 /* NSString+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 17F79926212EC06A00D76466 /* NSString+Addition.m */; };
 		956243AF248404BB00AAAD5F /* DownloadTaskQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 956243A7248404BA00AAAD5F /* DownloadTaskQueue.m */; };
 		956243B0248404BB00AAAD5F /* DownloadConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 956243AB248404BA00AAAD5F /* DownloadConfig.m */; };
 		956243B1248404BB00AAAD5F /* DownloadFileStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 956243AC248404BA00AAAD5F /* DownloadFileStatus.m */; };
 		956243B2248404BB00AAAD5F /* DownloadQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 956243AD248404BB00AAAD5F /* DownloadQueueManager.m */; };
-		956243B52484054E00AAAD5F /* NSFileManager+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 956243B32484054E00AAAD5F /* NSFileManager+Addition.m */; };
-		956243B82484058800AAAD5F /* NSString+Sign.m in Sources */ = {isa = PBXBuildFile; fileRef = 956243B72484058800AAAD5F /* NSString+Sign.m */; };
+		EF02594B91D3BC0E093168DE /* libPods-DownQueue.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90E6656E112D7C2E700BCD8C /* libPods-DownQueue.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,9 +31,8 @@
 		17F79901212EBEA200D76466 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		17F79903212EBEA200D76466 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		17F79904212EBEA200D76466 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		17F79925212EC06A00D76466 /* NSString+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Addition.h"; sourceTree = "<group>"; };
-		17F79926212EC06A00D76466 /* NSString+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Addition.m"; sourceTree = "<group>"; };
-		17F7993C212EC1D900D76466 /* CategoryConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryConstant.h; sourceTree = "<group>"; };
+		827D8D88BEFB026940613587 /* Pods-DownQueue.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DownQueue.release.xcconfig"; path = "Target Support Files/Pods-DownQueue/Pods-DownQueue.release.xcconfig"; sourceTree = "<group>"; };
+		90E6656E112D7C2E700BCD8C /* libPods-DownQueue.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DownQueue.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		956243A7248404BA00AAAD5F /* DownloadTaskQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadTaskQueue.m; sourceTree = "<group>"; };
 		956243A8248404BA00AAAD5F /* DownloadFileStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadFileStatus.h; sourceTree = "<group>"; };
 		956243A9248404BA00AAAD5F /* DownloadTaskQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadTaskQueue.h; sourceTree = "<group>"; };
@@ -44,10 +41,7 @@
 		956243AC248404BA00AAAD5F /* DownloadFileStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadFileStatus.m; sourceTree = "<group>"; };
 		956243AD248404BB00AAAD5F /* DownloadQueueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadQueueManager.m; sourceTree = "<group>"; };
 		956243AE248404BB00AAAD5F /* DownloadConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadConfig.h; sourceTree = "<group>"; };
-		956243B32484054E00AAAD5F /* NSFileManager+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Addition.m"; sourceTree = "<group>"; };
-		956243B42484054E00AAAD5F /* NSFileManager+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+Addition.h"; sourceTree = "<group>"; };
-		956243B62484058800AAAD5F /* NSString+Sign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Sign.h"; sourceTree = "<group>"; };
-		956243B72484058800AAAD5F /* NSString+Sign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Sign.m"; sourceTree = "<group>"; };
+		E61FEFE89728F512F1EC0363 /* Pods-DownQueue.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DownQueue.debug.xcconfig"; path = "Target Support Files/Pods-DownQueue/Pods-DownQueue.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF02594B91D3BC0E093168DE /* libPods-DownQueue.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +61,8 @@
 			children = (
 				17F798F4212EBEA000D76466 /* DownQueue */,
 				17F798F3212EBEA000D76466 /* Products */,
+				9F71A6BA9614B8C9A814D884 /* Pods */,
+				B869CBDAB5C93EC7A7362173 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,23 +102,25 @@
 				956243AC248404BA00AAAD5F /* DownloadFileStatus.m */,
 				956243AE248404BB00AAAD5F /* DownloadConfig.h */,
 				956243AB248404BA00AAAD5F /* DownloadConfig.m */,
-				17F79924212EC05500D76466 /* Categorys */,
 			);
 			path = DownLoadManager;
 			sourceTree = "<group>";
 		};
-		17F79924212EC05500D76466 /* Categorys */ = {
+		9F71A6BA9614B8C9A814D884 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				17F7993C212EC1D900D76466 /* CategoryConstant.h */,
-				956243B62484058800AAAD5F /* NSString+Sign.h */,
-				956243B72484058800AAAD5F /* NSString+Sign.m */,
-				956243B42484054E00AAAD5F /* NSFileManager+Addition.h */,
-				956243B32484054E00AAAD5F /* NSFileManager+Addition.m */,
-				17F79925212EC06A00D76466 /* NSString+Addition.h */,
-				17F79926212EC06A00D76466 /* NSString+Addition.m */,
+				E61FEFE89728F512F1EC0363 /* Pods-DownQueue.debug.xcconfig */,
+				827D8D88BEFB026940613587 /* Pods-DownQueue.release.xcconfig */,
 			);
-			path = Categorys;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		B869CBDAB5C93EC7A7362173 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				90E6656E112D7C2E700BCD8C /* libPods-DownQueue.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,6 +130,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 17F79908212EBEA200D76466 /* Build configuration list for PBXNativeTarget "DownQueue" */;
 			buildPhases = (
+				4114DD441BE2888BF47B65C5 /* [CP] Check Pods Manifest.lock */,
 				17F798EE212EBEA000D76466 /* Sources */,
 				17F798EF212EBEA000D76466 /* Frameworks */,
 				17F798F0212EBEA000D76466 /* Resources */,
@@ -189,15 +189,37 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4114DD441BE2888BF47B65C5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-DownQueue-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		17F798EE212EBEA000D76466 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				956243B52484054E00AAAD5F /* NSFileManager+Addition.m in Sources */,
-				956243B82484058800AAAD5F /* NSString+Sign.m in Sources */,
 				17F798FA212EBEA000D76466 /* ViewController.m in Sources */,
-				17F79927212EC06B00D76466 /* NSString+Addition.m in Sources */,
 				956243B2248404BB00AAAD5F /* DownloadQueueManager.m in Sources */,
 				17F79905212EBEA200D76466 /* main.m in Sources */,
 				956243B1248404BB00AAAD5F /* DownloadFileStatus.m in Sources */,
@@ -341,6 +363,7 @@
 		};
 		17F79909212EBEA200D76466 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E61FEFE89728F512F1EC0363 /* Pods-DownQueue.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
@@ -361,6 +384,7 @@
 		};
 		17F7990A212EBEA200D76466 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 827D8D88BEFB026940613587 /* Pods-DownQueue.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;

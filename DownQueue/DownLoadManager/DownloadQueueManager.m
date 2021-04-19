@@ -7,8 +7,8 @@
 //
 
 #import "DownloadQueueManager.h"
+#import <MKUtils/NSFileManager+Addition.h>
 #import "DownloadTaskQueue.h"
-#import "CategoryConstant.h"
 
 @implementation DownloadQueueManager
 

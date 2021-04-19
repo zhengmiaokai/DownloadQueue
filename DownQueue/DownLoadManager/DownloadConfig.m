@@ -7,7 +7,8 @@
 //
 
 #import "DownloadConfig.h"
-#import "CategoryConstant.h"
+#import <MKUtils/NSFileManager+Addition.h>
+#import <MKUtils/NSString+Sign.h>
 
 @interface DownloadConfig ()
 

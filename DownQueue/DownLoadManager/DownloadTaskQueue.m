@@ -7,8 +7,9 @@
 //
 
 #import "DownloadTaskQueue.h"
-#import "CategoryConstant.h"
 #import <objc/runtime.h>
+#import <MKUtils/NSString+Addition.h>
+#import <MKUtils/NSString+Sign.h>
 
 static const void *identifyKey = &identifyKey;
 

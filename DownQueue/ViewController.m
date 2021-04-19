@@ -7,8 +7,9 @@
 //
 
 #import "ViewController.h"
+#import <MKUtils/NSArray+Additions.h>
 #import "DownloadQueueManager.h"
-#import "CategoryConstant.h"
+
 
 @interface ViewController ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -70,7 +71,7 @@
 
 - (void)dowloadWithData:(NSInteger)index {
     
-    DownloadFileStatus* statusData  = [_statusArr objectAtIndex:index];
+    DownloadFileStatus* statusData  = [_statusArr safeObjectAtIndex:index];
     statusData.status = FileStatusTypeLoading;
     
     DownloadConfig* config = [[DownloadConfig alloc] init];
@@ -99,7 +100,7 @@
 - (void)suspend:(NSInteger)index {
     /* 挂起 */
     
-    DownloadFileStatus* statusData  = [_statusArr objectAtIndex:index];
+    DownloadFileStatus* statusData  = [_statusArr safeObjectAtIndex:index];
     
     __weak typeof(self) weakSelf = self;
     [_configurations enumerateObjectsUsingBlock:^(DownloadConfig*  _Nonnull config, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -115,7 +116,7 @@
 
 - (void)resume:(NSInteger)index {
     /* 恢复 */
-    DownloadFileStatus* statusData  = [_statusArr objectAtIndex:index];
+    DownloadFileStatus* statusData  = [_statusArr safeObjectAtIndex:index];
     
     __block BOOL isHave = NO;
     __weak typeof(self) weakSelf = self;
@@ -175,7 +176,7 @@
         [cell.contentView addSubview:rightLab];
     }
     
-    DownloadFileStatus* statusData = _statusArr[indexPath.row];
+    DownloadFileStatus* statusData = [_statusArr safeObjectAtIndex:indexPath.row];
     
     cell.textLabel.text = statusData.fileName;
     
@@ -192,7 +193,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    DownloadFileStatus* status = [_statusArr objectAtIndex:indexPath.row];
+    DownloadFileStatus* status = [_statusArr safeObjectAtIndex:indexPath.row];
     
     switch (status.operation) {
         case 1:
