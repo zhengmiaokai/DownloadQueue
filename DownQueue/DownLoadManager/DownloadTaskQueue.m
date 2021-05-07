@@ -139,13 +139,27 @@ didCompleteWithError:(NSError *)error {
     }
     
     if (taskItem) {
-        
         NSData* fileData = nil;
         if ([taskItem isKindOfClass:[URLSessionDataTaskItem class]]) {
-           fileData = [taskItem valueForKey:@"fileData"];
+           fileData = ((URLSessionDataTaskItem *)taskItem).fileData;
         }
         
-        taskItem.didComplete(task, fileData?[fileData copy]:fileData, fileData?nil:[NSError errorWithDomain:@"无效地址" code:-1 userInfo:nil]);
+        NSHTTPURLResponse* response = (NSHTTPURLResponse *)task.response;
+        
+        NSError *error = nil;
+        if (response.statusCode/200 == 1) {
+            error = nil;
+        } else {
+            if (fileData) {
+                NSString* desc = [[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding];
+                error = [NSError errorWithDomain:desc code:response.statusCode userInfo:nil];
+            } else {
+                error = [NSError errorWithDomain:@"无效地址" code:response.statusCode userInfo:nil];
+            }
+            fileData = nil;
+        }
+        
+        taskItem.didComplete(task, fileData, error);
         [_taskItems removeObjectForKey:task.identify];
     }
 }

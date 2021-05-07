@@ -12,25 +12,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DownloadConfig : NSObject
 
+/// 下载配置
 @property (nonatomic, copy) NSString* fileName;
-
-@property (nonatomic, copy) NSString* foldName;
-
 @property (nonatomic, copy) NSString* URLString;
+@property (nonatomic, copy) NSString* foldName; /// 默认 'Library/Downloads'
 
+/// 下载信息
 @property (nonatomic, assign) NSInteger currentLength;
-
 @property (nonatomic, assign) NSInteger totalLength;
 
-@property (nonatomic, strong) NSFileHandle *writeHandle;
-
-@property (nonatomic, strong) NSFileHandle *readHandle;
+@property (nonatomic, copy, readonly) NSString* filePath;
+@property (nonatomic, copy, readonly) NSString* tmpPath;
 
 @property (nonatomic, strong) NSURLSessionTask* downloadTask;
 
-@property (nonatomic, copy, readonly) NSString* filePath;
+- (void)didReceiveData:(NSData *)data;
 
-@property (nonatomic, copy, readonly) NSString* tmpPath;
+- (void)didComplete;
+
+- (void)didReceiveResponse:(NSURLResponse *)response;
+
+- (NSUInteger)availableDataLength:(NSString *)path;
 
 @end
 

@@ -55,6 +55,12 @@
     return downloadTask;
 }
 
+- (void)moveFile:(NSString *)tmpPath toPath:(NSString *)filePath {
+    NSData* data = [[NSData alloc] initWithContentsOfFile:tmpPath];
+    [data writeToFile:filePath atomically:YES];
+    [NSFileManager removefile:tmpPath];
+}
+
 /* dataTask */
 - (NSURLSessionTask *)dataTaskWithConfig:(DownloadConfig *)configuration
                                   receiveDataLength:(void(^)(DownloadConfig* configuration))receiveDataLength
@@ -62,20 +68,15 @@
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:configuration.URLString]];
     
-    configuration.readHandle = [NSFileHandle fileHandleForReadingAtPath:configuration.tmpPath];
-    
-    configuration.currentLength = [[configuration.readHandle availableData] length];
+    configuration.currentLength = [configuration availableDataLength:configuration.tmpPath];
     
     NSString *range = [NSString stringWithFormat:@"bytes=%zd-", configuration.currentLength];
     [request setValue:range forHTTPHeaderField:@"Range"];
     
     NSURLSessionDataTask* downloadTask = [self dataTaskWithRequest:request didReceiveData:^(NSURLSessionDataTask *dataTask, NSData *data) {
         //子线程返回
-        [configuration.writeHandle seekToEndOfFile];
+        [configuration didReceiveData:data];
         
-        [configuration.writeHandle writeData:data];
-        
-        configuration.currentLength += data.length;
         if (receiveDataLength) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 receiveDataLength(configuration);
@@ -83,31 +84,20 @@
         }
     } didReceiveResponse:^NSURLSessionResponseDisposition(NSURLSessionDataTask *dataTask, NSURLResponse *response) {
         //子线程返回
-        
-        configuration.totalLength = response.expectedContentLength + configuration.currentLength;
-        
-        if ([NSFileManager creatFileWithPath:configuration.tmpPath]) {
-            configuration.writeHandle = [NSFileHandle fileHandleForWritingAtPath:configuration.tmpPath];
-        }
+        [configuration didReceiveResponse:response];
         
         return NSURLSessionResponseAllow;
     } didComplete:^(NSURLSessionTask *task,  NSData* fileData, NSError *error) {
         //子线程返回
-        if ((configuration.currentLength == configuration.totalLength) && (configuration.totalLength > 0)) {
-            configuration.currentLength = 0;
-            configuration.totalLength = 0;
-            
-            [configuration.writeHandle closeFile];
-            
-            [self moveFile:configuration.tmpPath toPath:configuration.filePath];
+        if (!error) {
+            [configuration didComplete];
             
             if (completeBlock) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completeBlock(configuration, error);
                 });
             }
-        }
-        else {
+        } else {
             if (completeBlock) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completeBlock(configuration, error);
@@ -123,12 +113,6 @@
     return downloadTask;
 }
 
-- (void)moveFile:(NSString *)tmpPath toPath:(NSString *)path {
-    NSData* data = [[NSData alloc] initWithContentsOfFile:tmpPath];
-    [data writeToFile:path atomically:YES];
-    [NSFileManager removefile:tmpPath];
-}
-
 - (NSArray <DownloadFileStatus*> *)getDownloadsStatus:(NSArray *)configurations {
     
     NSMutableArray* result = [NSMutableArray arrayWithCapacity:configurations.count];
@@ -141,24 +125,20 @@
         
         if ([NSFileManager isExistsAtPath:configuration.filePath]) {
             
-            configuration.readHandle = [NSFileHandle fileHandleForReadingAtPath:configuration.filePath];
-            if (configuration.readHandle) {
-                NSUInteger length = [[configuration.readHandle availableData] length];
+            NSUInteger length = [configuration availableDataLength:configuration.filePath];
+            if (length != 0) {
                 statusModel.status = FileStatusTypeFinish;
                 statusModel.length = length;
                 statusModel.filePath = configuration.filePath;
                 [result addObject:statusModel];
             }
-        }
-        else {
-            configuration.readHandle = [NSFileHandle fileHandleForReadingAtPath:configuration.tmpPath];
-            if (configuration.readHandle) {
-                NSUInteger length = [[configuration.readHandle availableData] length];
+        } else {
+            NSUInteger length = [configuration availableDataLength:configuration.tmpPath];
+            if (length != 0) {
                 statusModel.status = FileStatusTypePause;
                 statusModel.length =length;
                 [result addObject:statusModel];
-            }
-            else {
+            } else {
                 statusModel.status = FileStatusTypeBegin;
                 statusModel.length = 0;
                 [result addObject:statusModel];
